@@ -29,7 +29,7 @@ if (!isset($_SESSION['admin_id'])) {
                 Overview
               </div>
               <h2 class="page-title">
-                Borrower Panel
+                For Approval Borrowers
               </h2>
             </div>
             <!-- Page title actions -->
@@ -235,7 +235,7 @@ if (!isset($_SESSION['admin_id'])) {
                 swal("Success", {
                   icon: "success",
                 }).then((value) => {
-                  // sendSMS(col1, 'APPROVE');
+                  sendSMS(col1, 'APPROVE');
                   location.reload();
                 });
               }

@@ -29,7 +29,7 @@ if (!isset($_SESSION['admin_id'])) {
                 Overview
               </div>
               <h2 class="page-title">
-                Cancel/Rejected Transaction
+                Cancel/Rejected/Invalid Transactions
               </h2>
             </div>
 
@@ -93,7 +93,7 @@ if (!isset($_SESSION['admin_id'])) {
                       tbl_transaction_header a
                   INNER JOIN tbl_borrower b ON
                       a.borrower_id = b.borrower_id
-                  WHERE a.status IN (4,5)
+                  WHERE a.status IN (4,5,7)
                   ORDER BY
                       a.date_created
                   DESC";
@@ -107,7 +107,9 @@ if (!isset($_SESSION['admin_id'])) {
                             if ($row['status'] == 4) {
                               echo '<span class="badge badge-sm bg-pink text-uppercase ms-auto text-white">REJECTED</span>';
                             } else if ($row['status'] == 5) {
-                              echo '<span class="badge badge-sm bg-warning text-uppercase ms-auto text-white">CANCELLED</span>';
+                              echo '<span class="badge badge-sm bg-pink text-uppercase ms-auto text-white">CANCELLED</span>';
+                            } else if ($row['status'] == 7) {
+                              echo '<span class="badge badge-sm bg-pink text-uppercase ms-auto text-white">INVALID</span>';
                             }
                             ?>
                           </td>
@@ -147,7 +149,6 @@ if (!isset($_SESSION['admin_id'])) {
 
 </html>
 <script>
-
   $(document).ready(function() {
 
     function getDetails(data) {

@@ -113,7 +113,7 @@ if (!isset($_SESSION['borrower_id'])) {
                       tbl_transaction_header a
                   INNER JOIN tbl_borrower b ON
                       a.borrower_id = b.borrower_id
-                  WHERE a.status IN (0,5,4) and a.borrower_id='$borrow'
+                  WHERE a.status IN (0,5,4,7) and a.borrower_id='$borrow'
                   ORDER BY
                       a.status,
                       a.date_created
@@ -159,8 +159,8 @@ if (!isset($_SESSION['borrower_id'])) {
                               echo '<span class="badge badge-sm bg-success text-uppercase ms-auto text-white">RETURNED</span>';
                             } else if ($row['status'] == 4) {
                               echo '<span class="badge badge-sm bg-pink text-uppercase ms-auto text-white">REJECTED</span>';
-                            } else if ($row['status'] == 5) {
-                              echo '<span class="badge badge-sm bg-warning text-uppercase ms-auto text-white">CANCELLED</span>';
+                            } else if ($row['status'] == 5 || $row['status'] == 7) {
+                              echo '<span class="badge badge-sm bg-danger text-uppercase ms-auto text-white">CANCELLED</span>';
                             }
                             ?>
                           </td>

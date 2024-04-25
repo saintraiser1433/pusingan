@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     if ($action == 'ADD') {
         $penaltyId = $_POST['penaltyId'];
         $date = date('Y-m-d');
-        $sql = "UPDATE tbl_penalty set status=1 and date_paid='$date' where penalty_id=$penaltyId";
+        $sql = "UPDATE tbl_penalty set status=1, date_paid='$date' where penalty_id=$penaltyId";
         $conn->query($sql);
     } 
 }

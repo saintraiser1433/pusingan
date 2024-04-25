@@ -175,7 +175,7 @@ if (!isset($_SESSION['borrower_id'])) {
 
 
 
-          $('#append-transaction').html(
+          $('#append-transaction').apppend(
             `
             <tr>
             <td class="sort-id">${item.transaction_no}</td>

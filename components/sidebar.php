@@ -78,7 +78,7 @@
                 Ongoing Transaction
               </a>
               <a class="dropdown-item" href="./cancel-rejected.php" rel="noopener">
-                Cancel/Retire
+                Cancel/Invalid/Rejected
               </a>
             </div>
           </li>

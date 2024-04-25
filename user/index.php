@@ -36,35 +36,35 @@ if (!isset($_SESSION['borrower_id'])) {
         </div>
       </div>
 
-        <!-- Page body -->
-        <div class="page-body">
-          <div class="container-xl">
-            <div class="row">
+      <!-- Page body -->
+      <div class="page-body">
+        <div class="container-xl">
+          <div class="row">
 
-              <div class="card">
-                <div class="card-status-bottom bg-success"></div>
-                <div class="card-header">
+            <div class="card">
+              <div class="card-status-bottom bg-success"></div>
+              <div class="card-header">
 
-                  <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+                <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+                  <li class="nav-item">
+                    <a href="#all" class="nav-link active" data-bs-toggle="tab">All</a>
+                  </li>
+                  <?php
+                  $sql = "SELECT * FROM tbl_category where status = 1  order by category_id ";
+                  $rs = $conn->query($sql);
+                  foreach ($rs as $row) { ?>
                     <li class="nav-item">
-                      <a href="#all" class="nav-link active" data-bs-toggle="tab">All</a>
+                      <a href="#<?php echo str_replace(' ', '', $row['category_name']) ?>" class="nav-link text-capitalize" data-bs-toggle="tab"><?php echo $row['category_name'] ?></a>
                     </li>
-                    <?php
-                    $sql = "SELECT * FROM tbl_category order by category_id";
-                    $rs = $conn->query($sql);
-                    foreach ($rs as $row) { ?>
-                      <li class="nav-item">
-                        <a href="#<?php echo str_replace(' ', '', $row['category_name']) ?>" class="nav-link text-capitalize" data-bs-toggle="tab"><?php echo $row['category_name'] ?></a>
-                      </li>
-                    <?php } ?>
-                  </ul>
-                </div>
-                <div class="card-body">
-                  <div class="tab-content">
-                    <div class="tab-pane active show" id="all">
-                      <div class="row" id="cardContainer">
-                        <?php
-                        $sqls = "SELECT
+                  <?php } ?>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active show" id="all">
+                    <div class="row" id="cardContainer">
+                      <?php
+                      $sqls = "SELECT
                                       a.item_code,
                                       a.item_name,
                                       a.img_path,
@@ -75,49 +75,53 @@ if (!isset($_SESSION['borrower_id'])) {
                                       tbl_item a
                                   LEFT JOIN tbl_category b ON
                                       a.category_id = b.category_id
+
                                   LEFT JOIN tbl_size c ON
                                       a.size_id = c.size_id
-                                  WHERE a.status=1
+                                  WHERE a.status=1 and b.status = 1
                                   ORDER BY
                                       a.date_created ASC";
-                        $rss = $conn->query($sqls);
-                        foreach ($rss as $rows) { ?>
-                          <div class="col-lg-2 pb-2">
+                      $rss = $conn->query($sqls);
+                      foreach ($rss as $rows) { ?>
+                        <div class="col-lg-2 pb-2">
 
-                            <div class="card card-link card-link-pop" onclick="window.location.href='borrowslip.php?code=<?php echo $rows['item_code'] ?>'" style="cursor:pointer">
 
-                              <?php
-                              if ($rows['quantity'] === '0') {
 
-                                echo "
-                                
-                                <div class='ribbon bg-danger'> Out of Stock </div>";
-                              } else {
-                                echo "<div class='ribbon bg-success'> Qty : " . $rows['quantity'] . "</div>";
-                              }
-                              ?>
-                              <div class="card-status-bottom bg-success"></div>
-                              <!-- Photo -->
-                              <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/item/<?php echo $rows['img_path'] ?>')"></div>
-                              <div class="card-body">
-                                <span class="text-capitalize fw-bolder asname"><?php echo $rows['item_name'] ?></span>
-                                <p class="text-muted asdes"><?php echo $rows['description'] ?></p>
-
-                              </div>
-                            </div>
-                          </div>
-
-                        <?php } ?>
-                      </div>
-                    </div>
-                    <?php
-                    foreach ($rs as $rowx) { ?>
-                      <!-- <div class="tab-pane fade active show" id="tabs-home-8"> -->
-                      <div class="tab-pane fade show" id="<?php echo str_replace(' ', '', $rowx['category_name']) ?>">
-                        <div class="row">
                           <?php
-                          $catid = $rowx['category_id'];
-                          $sql = "SELECT
+                          if ($rows['quantity'] === '0') {
+
+                            echo "
+                                <div class='card card-link card-link-pop'>
+                                <div class='ribbon bg-danger'> Out of Stock </div>";
+                          } else {
+                            echo "
+                                <div class='card card-link card-link-pop' onclick=\"window.location.href='borrowslip.php?code=" . $rows['item_code'] . "'\" style='cursor:pointer'>
+                                    <div class='ribbon bg-success'> Qty : " . $rows['quantity'] . "</div>
+                                ";
+                          }
+                          ?>
+                          <div class="card-status-bottom bg-success"></div>
+                          <!-- Photo -->
+                          <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/item/<?php echo $rows['img_path'] ?>')"></div>
+                          <div class="card-body">
+                            <span class="text-capitalize fw-bolder asname"><?php echo $rows['item_name'] ?></span>
+                            <p class="text-muted asdes"><?php echo $rows['description'] ?></p>
+
+                          </div>
+                        </div>
+                    </div>
+
+                  <?php } ?>
+                  </div>
+                </div>
+                <?php
+                foreach ($rs as $rowx) { ?>
+                  <!-- <div class="tab-pane fade active show" id="tabs-home-8"> -->
+                  <div class="tab-pane fade show" id="<?php echo str_replace(' ', '', $rowx['category_name']) ?>">
+                    <div class="row">
+                      <?php
+                      $catid = $rowx['category_id'];
+                      $sql = "SELECT
                           a.item_code,
                           a.item_name,
                           a.img_path,
@@ -133,54 +137,55 @@ if (!isset($_SESSION['borrower_id'])) {
                       WHERE a.status=1 and a.category_id=$catid
                       ORDER BY
                           a.date_created ASC";
-                          $rst = $conn->query($sql);
-                          foreach ($rst as $rowt) { ?>
-                            <div class="col-lg-2 pb-2">
+                      $rst = $conn->query($sql);
+                      foreach ($rst as $rowt) { ?>
+                        <div class="col-lg-2 pb-2">
 
-                              <div class="card card-link card-link-pop" onclick="window.location.href='borrowslip.php?code=<?php echo $rowt['item_code'] ?>'" style="cursor:pointer">
-                                <?php
-                                if ($rowt['quantity'] === '0') {
-                                  echo "<div class='ribbon bg-danger'> Out of Stock </div>";
-                                } else {
-                                  echo "<div class='ribbon bg-success'> Qty : " . $rowt['quantity'] . "</div>";
-                                }
-                                ?>
-                                <div class="card-status-bottom bg-success"></div>
-                                <!-- Photo -->
-                                <div class="img-responsive img-responsive-4x3 card-img-top" style="background-image: url('../static/item/<?php echo $rowt['img_path'] ?>')"></div>
-                                <div class="card-body">
-                                  <span class="text-capitalize fw-bolder"><?php echo $rowt['item_name'] ?></span>
-                                  <p class="text-muted"><?php echo $rowt['description'] ?></p>
-                                </div>
-                              </div>
+                          <div class="card card-link card-link-pop" onclick="window.location.href='borrowslip.php?code=<?php echo $rowt['item_code'] ?>'" style="cursor:pointer">
+                            <?php
+                            if ($rowt['quantity'] === '0') {
+                              echo "<div class='ribbon bg-danger'> Out of Stock </div>";
+                            } else {
+                              echo "<div class='ribbon bg-success'> Qty : " . $rowt['quantity'] . "</div>";
+                            }
+                            ?>
+                            <div class="card-status-bottom bg-success"></div>
+                            <!-- Photo -->
+                            <div class="img-responsive img-responsive-4x3 card-img-top" style="background-image: url('../static/item/<?php echo $rowt['img_path'] ?>')"></div>
+                            <div class="card-body">
+                              <span class="text-capitalize fw-bolder"><?php echo $rowt['item_name'] ?></span>
+                              <p class="text-muted"><?php echo $rowt['description'] ?></p>
                             </div>
-
-                          <?php } ?>
+                          </div>
                         </div>
-                      </div>
-                    <?php
-                    } ?>
+
+                      <?php } ?>
+                    </div>
                   </div>
-                </div>
+                <?php
+                } ?>
               </div>
             </div>
-
           </div>
         </div>
 
-
-
-
-
       </div>
-      <?php include '../components/footer.php' ?>
     </div>
-    <?php include '../components/modal.php' ?>
 
-    <?php include '../components/script.php' ?>
+
+
+
+
+  </div>
+  <?php include '../components/footer.php' ?>
+  </div>
+  <?php include '../components/modal.php' ?>
+
+  <?php include '../components/script.php' ?>
 
 </body>
 <?php include '../dist/xx_close_api_user.php' ?>
+
 </html>
 <script>
 

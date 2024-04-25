@@ -30,7 +30,7 @@ if (!isset($_SESSION['admin_id'])) {
                 Overview
               </div>
               <h2 class="page-title">
-                Transaction
+                Ongoing Transaction
               </h2>
             </div>
 
@@ -183,6 +183,7 @@ if (!isset($_SESSION['admin_id'])) {
                               <a href="#" class="badge bg-danger reject text-decoration-none" title="Reject">
                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-thumb-down-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 21.008a3 3 0 0 0 2.995 -2.823l.005 -.177v-4h2a3 3 0 0 0 2.98 -2.65l.015 -.173l.005 -.177l-.02 -.196l-1.006 -5.032c-.381 -1.625 -1.502 -2.796 -2.81 -2.78l-.164 .008h-8a1 1 0 0 0 -.993 .884l-.007 .116l.001 9.536a1 1 0 0 0 .5 .866a2.998 2.998 0 0 1 1.492 2.396l.007 .202v1a3 3 0 0 0 3 3z" stroke-width="0" fill="currentColor" /><path d="M5 14.008a1 1 0 0 0 .993 -.883l.007 -.117v-9a1 1 0 0 0 -.883 -.993l-.117 -.007h-1a2 2 0 0 0 -1.995 1.852l-.005 .15v7a2 2 0 0 0 1.85 1.994l.15 .005h1z" stroke-width="0" fill="currentColor" /></svg>
                               </a>';
+                            
                             } else {
                               echo '';
                             }
@@ -218,6 +219,9 @@ if (!isset($_SESSION['admin_id'])) {
 <script>
   $(document).ready(function() {
 
+
+
+
     function getDetails(data) {
       $.ajax({
         method: "POST",
@@ -234,7 +238,9 @@ if (!isset($_SESSION['admin_id'])) {
             var item = response[i];
             // Define a variable to hold the status badge HTML
             var statusBadge;
-            if (item.status == 4) {
+            if (item.status == 5) {
+              statusBadge = '<span class="badge badge-sm bg-danger text-uppercase ms-auto text-white">Unavailable</span>';
+            } else if (item.status == 4) {
               statusBadge = '<span class="badge badge-sm bg-secondary text-uppercase ms-auto text-white">For Approval</span>';
             } else if (item.status == 3) {
               statusBadge = '<span class="badge badge-sm bg-teal text-uppercase ms-auto text-white">Waiting to claim</span>';
@@ -249,7 +255,7 @@ if (!isset($_SESSION['admin_id'])) {
             }
             if (item.status == 1 || item.status == 2) {
               $('#act').show();
-              $('.thedata').html(
+              $('.thedata').append(
                 `<tr>
                 <td>${item.item_name}</td>
                 <td>${item.qty}</td>

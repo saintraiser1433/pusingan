@@ -125,6 +125,10 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             $sqlx = "UPDATE tbl_item SET quantity=quantity-$transqty where item_code='$code'";
             $conn->query($sqlx);
         }
+        reprocessTransact($conn);
+        //update status item when 0 qty
+        $sqlqty = "UPDATE tbl_item SET status = 0 where quantity = 0";
+        $conn->query($sqlqty);
     } else if ($action == 'CANCELLED') {
         //for cancelled
         $sqlt = "UPDATE tbl_transaction_header SET status=5 where transaction_no=$trans";
@@ -159,6 +163,29 @@ function checkReturns($transId, $conn)
         } else {
             $updateqty = "UPDATE tbl_transaction_detail SET status=1 where trans_item_id=$transId";
             $conn->query($updateqty);
+        }
+    }
+}
+
+function reprocessTransact($conn)
+{
+    $sql = "SELECT 
+    b.trans_item_id,
+    c.quantity,
+    b.transaction_no
+FROM tbl_transaction_header a 
+INNER JOIN tbl_transaction_detail b ON a.transaction_no = b.transaction_no 
+INNER JOIN tbl_item c ON b.item_code= c.item_code WHERE a.status IN (3,6)";
+    $rs = $conn->query($sql);
+    foreach ($rs as $row) {
+        $id = $row['trans_item_id'];
+        $trans_no = $row['transaction_no'];
+        $qty = $row['quantity'];
+        if ($qty == 0) {
+            $updateDetail = "UPDATE tbl_transaction_detail SET status = 5 where trans_item_id =$id";
+            $conn->query($updateDetail);
+            $updateHeader = "UPDATE tbl_transaction_header SET status = 7 where transaction_no =$trans_no";
+            $conn->query($updateHeader);
         }
     }
 }
@@ -200,7 +227,8 @@ GROUP BY
 
 
 
-     //status for transaction header
+    //status for transaction header
+    // 7 - Invalid Transaction
     // 6-For Approval 
     // 5-Cancelled 
     // 4-Rejected
@@ -211,6 +239,7 @@ GROUP BY
 
 
     //status for transaction details
+    // 5- Unavailable
     // 4-For Approval
     // 3-Waiting to claim
     // 2-Waiting to returned  

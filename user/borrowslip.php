@@ -132,7 +132,7 @@ if (!isset($_GET['code'])) {
 </html>
 
 <script>
-  let counter = parseInt($('#counter').val());
+  let counter = 1;
 
   $(document).on('click', '#add', function() {
     var counterElement = $(this).siblings('input');
@@ -141,6 +141,7 @@ if (!isset($_GET['code'])) {
 
     if (currentValue < currentQuantity) {
       counterElement.val(currentValue + 1);
+      counter = currentValue + 1;
     }
   });
 
@@ -149,6 +150,7 @@ if (!isset($_GET['code'])) {
     var currentValue = parseInt(counterElement.val());
     if (currentValue > 1) {
       counterElement.val(currentValue - 1);
+      counter = currentValue -1;
     }
   });
 

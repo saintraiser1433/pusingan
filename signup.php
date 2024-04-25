@@ -72,7 +72,7 @@ include 'connection.php';
                                                     <label class="form-label">Phone Number</label>
                                                     <div class="input-group">
                                                         <div class="prepend-text bg-teal text-white">+63</div>
-                                                        <input type="number" name="phonenumber" class="form-control" onKeyPress="if(this.value.length==9) return false;" id="phonenumber" required>
+                                                        <input type="number" name="phonenumber" class="form-control" onKeyPress="if(this.value.length==10) return false;" id="phonenumber" required>
                                                     </div>
 
                                                 </div>

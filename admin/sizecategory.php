@@ -27,7 +27,7 @@ if (!isset($_SESSION['admin_id'])) {
                 Overview
               </div>
               <h2 class="page-title">
-                Category Panel
+                Size Category
               </h2>
             </div>
             <!-- Page title actions -->
